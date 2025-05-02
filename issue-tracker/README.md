@@ -1,0 +1,3 @@
+Academic Issue Tracking System (AITS)
+
+AITS is a web-based platform for Makerere University students to log academic record issues, featuring role-based access for students, lecturers, and registrars. Built with Django (backend) and React (frontend), it provides issue logging, tracking, resolution, and notifications, aiming to streamline communication and improve efficiency. To set up, clone the repo, configure backend (PostgreSQL, Django), install dependencies, run migrations, and start the server. Then, navigate to the frontend, install dependencies, and start the React app. Contributions are welcome for ongoing development focusing on notifications, UI/UX, and advanced features.
