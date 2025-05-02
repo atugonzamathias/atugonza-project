@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BackArrow from '../../components/BackArrow';
 
-const BASE_URL = "http://localhost:8000"; // Adjust if your backend URL is different
+const BASE_URL = "https://atumathias.pythonanywhere.com"; // Adjust if your backend URL is different
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -49,11 +49,11 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const validTypes = ["image/jpeg", "image/png"];
+    const validTypes = ["image/jpeg", "image/png", "image/jpg"];
     const maxSize = 2 * 1024 * 1024;
 
     if (!validTypes.includes(file.type)) {
-      alert("Only JPEG and PNG images are allowed.");
+      alert("Only JPEG, JPG and PNG images are allowed.");
       return;
     }
 
