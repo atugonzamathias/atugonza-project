@@ -83,9 +83,17 @@ function Login() {
   };
 
   const handleRoleRedirect = (role) => {
-    if (role === "student") navigate("/studdash");
-    else if (role === "lecturer") navigate("/lectdash");
-    else if (role === "registrar") navigate("/regdash");
+    // Handle invalid role scenario and stay on the login page
+    if (role === "student") {
+      navigate("/studdash");
+    } else if (role === "lecturer") {
+      navigate("/lectdash");
+    } else if (role === "registrar") {
+      navigate("/regdash");
+    } else {
+      toast.error("Invalid user role. Contact system admin.", { autoClose: 10000 });
+      // Stay on the login page (no navigation)
+    }
   };
 
   return (

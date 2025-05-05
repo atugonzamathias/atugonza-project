@@ -20,6 +20,7 @@ import ResetPassword from "./pages/auth/ResetPassword.jsx";
 import LecturerDashboard from "./pages/lecturer/Lecturerdash.jsx";
 import NotificationsPage from "./pages/NotificationPage.jsx"; 
 import ResolveIssue from "./pages/lecturer/ResolveIssue";
+import NotFound from "./pages/auth/NotFound.jsx";
 import './global.css';
 import './index.css';
 
@@ -55,6 +56,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/assign/:id" element={<Assign />} />
         <Route path="/resolve/:id" element={<ResolveIssue />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
