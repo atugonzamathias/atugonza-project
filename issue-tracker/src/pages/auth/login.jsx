@@ -25,13 +25,15 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const response = await API.post("/login/", formData);
-
+  
+      // Save tokens
       localStorage.setItem("accessToken", response.data.access);
       localStorage.setItem("refreshToken", response.data.refresh);
-
+  
+      // Check OTP requirement
       if (response.data.otp_required) {
         setOtpRequired(true);
         toast.info("OTP verification required", { autoClose: 10000 });
@@ -41,22 +43,20 @@ function Login() {
       } else {
         toast.error("User role missing. Contact system admin.", { autoClose: 10000 });
       }
-
+  
     } catch (err) {
-      console.error("Login Error:", err);
-      
-      // ✨ Fix: Ensure user stays on login page and sees the error
-      if (err.response && err.response.data && err.response.data.detail) {
-        toast.error(err.response.data.detail, { autoClose: 10000 });
-      } else {
-        toast.error("Login failed. Please try again.", { autoClose: 10000 });
-      }
-      
-      // Do NOT navigate anywhere; user stays on login page
+      // Safely get error message
+      const errorMessage = err.response?.data?.detail || "Login failed. Please check your credentials.";
+      console.error("Login Error:", errorMessage);
+      toast.error(errorMessage, { autoClose: 10000 });
+  
+      // Make sure no navigation happens on error
+      setOtpRequired(false); // Reset OTP if any
     } finally {
       setLoading(false);
     }
   };
+  
 
   const verifyOtp = async (otpCode) => {
     setLoadingOtp(true);
