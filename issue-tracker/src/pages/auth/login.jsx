@@ -35,17 +35,17 @@ function Login() {
       if (response.data.otp_required) {
         setOtpRequired(true);
         toast.info("OTP verification required", { autoClose: 10000 });
-      } else {
+      } else if (response.data.role) {
         toast.success("Login successful!", { autoClose: 3000 });
         handleRoleRedirect(response.data.role);
+      } else {
+        toast.error("User role missing. Contact system admin.", { autoClose: 10000 });
       }
 
     } catch (err) {
       console.error("Login Error:", err);
-
-      // Access the correct error message from the backend
       toast.error(err.response?.data?.detail || "Invalid credentials. Please try again.", {
-        autoClose: 15000,  // 15 seconds for error messages
+        autoClose: 15000,
       });
     } finally {
       setLoading(false);
@@ -86,7 +86,6 @@ function Login() {
     if (role === "student") navigate("/studdash");
     else if (role === "lecturer") navigate("/lectdash");
     else if (role === "registrar") navigate("/regdash");
-    else navigate("/unknown-role");
   };
 
   return (
