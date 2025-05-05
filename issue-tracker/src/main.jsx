@@ -1,7 +1,7 @@
+import { BrowserRouter, Routes, Route, Navigate  } from "react-router-dom";
 import React from 'react';
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Register from "./pages/auth/Register.jsx";
@@ -46,6 +46,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/assign/:id" element={<Assign />} />
         <Route path="/resolve/:id" element={<ResolveIssue />} />
+        <Route path="*" element={<Navigate to="/login" />} />
         
       </Routes>
     </BrowserRouter>

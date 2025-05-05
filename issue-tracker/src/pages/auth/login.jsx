@@ -8,9 +8,9 @@ function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [otp, setOtp] = useState(""); // OTP state
-  const [otpRequired, setOtpRequired] = useState(false); // Flag to check if OTP is required
-  const [loadingOtp, setLoadingOtp] = useState(false); // Flag to handle OTP verification loading
+  const [otp, setOtp] = useState("");
+  const [otpRequired, setOtpRequired] = useState(false);
+  const [loadingOtp, setLoadingOtp] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,7 +18,6 @@ function Login() {
   };
 
   useEffect(() => {
-    // Automatically verify OTP when 6 digits are entered
     if (otp.length === 6) {
       verifyOtp(otp);
     }
@@ -28,52 +27,49 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-  
+
     try {
       const response = await API.post("/login/", formData);
-  
-      // ✅ Always save tokens immediately
+
       localStorage.setItem("accessToken", response.data.access);
       localStorage.setItem("refreshToken", response.data.refresh);
-  
+
       if (response.data.otp_required) {
-        setOtpRequired(true); // ✅ Show OTP input now
+        setOtpRequired(true);
       } else {
-        // ✅ OTP not needed, go straight to dashboard
         handleRoleRedirect(response.data.role);
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Please try again.");
+      console.error("Login Error:", err);
+      setError(err.response?.data?.message || "Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
   };
-  
 
-  const verifyOtp = async (otp) => {
+  const verifyOtp = async (otpCode) => {
     setLoadingOtp(true);
     try {
       const accessToken = localStorage.getItem("accessToken");
-  
+
       const response = await API.post(
         "/verify-otp/",
-        { code: otp },
+        { code: otpCode },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-  
-      // ✅ Update tokens after successful OTP verification
+
       localStorage.setItem("accessToken", response.data.access);
       localStorage.setItem("refreshToken", response.data.refresh);
       localStorage.setItem("userRole", response.data.user.role);
-  
-      // ✅ Redirect based on role
+
       handleRoleRedirect(response.data.user.role);
-  
+
     } catch (err) {
+      console.error("OTP Error:", err);
       setError("Invalid OTP, please try again.");
     } finally {
       setLoadingOtp(false);
@@ -84,7 +80,7 @@ function Login() {
     if (role === "student") navigate("/studdash");
     else if (role === "lecturer") navigate("/lectdash");
     else if (role === "registrar") navigate("/regdash");
-    else navigate("/unknown-role");
+    else navigate("/unknown-role"); // Optional route for undefined roles
   };
 
   return (
