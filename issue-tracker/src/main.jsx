@@ -55,9 +55,6 @@ createRoot(document.getElementById("root")).render(
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/assign/:id" element={<Assign />} />
         <Route path="/resolve/:id" element={<ResolveIssue />} />
-        
-        {/* Catch-all: redirect unknown routes to login */}
-        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
