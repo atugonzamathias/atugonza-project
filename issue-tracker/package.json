@@ -9,7 +9,8 @@
     "vercel-build": "npm run build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start-server": "nodemon index.js"
+    "start-server": "nodemon index.js",
+    "serve": "node server.js"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.1.6",
