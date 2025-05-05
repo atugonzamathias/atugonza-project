@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import API from "../../API";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [otp, setOtp] = useState("");
   const [otpRequired, setOtpRequired] = useState(false);
   const [loadingOtp, setLoadingOtp] = useState(false);
@@ -26,7 +25,6 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     try {
       const response = await API.post("/login/", formData);
@@ -36,12 +34,17 @@ function Login() {
 
       if (response.data.otp_required) {
         setOtpRequired(true);
+        toast.info("OTP verification required", { autoClose: 10000 });
       } else {
+        toast.success("Login successful!", { autoClose: 3000 });
         handleRoleRedirect(response.data.role);
       }
+
     } catch (err) {
       console.error("Login Error:", err);
-      setError(err.response?.data?.message || "Login failed. Please check your credentials.");
+      toast.error(err.response?.data?.message || "Invalid credentials. Please try again.", {
+        autoClose: 15000,  // 15 seconds for error messages
+      });
     } finally {
       setLoading(false);
     }
@@ -66,11 +69,12 @@ function Login() {
       localStorage.setItem("refreshToken", response.data.refresh);
       localStorage.setItem("userRole", response.data.user.role);
 
+      toast.success("OTP verified successfully!", { autoClose: 10000 });
       handleRoleRedirect(response.data.user.role);
 
     } catch (err) {
       console.error("OTP Error:", err);
-      setError("Invalid OTP, please try again.");
+      toast.error("Invalid OTP, please try again.", { autoClose: 15000 });
     } finally {
       setLoadingOtp(false);
     }
@@ -80,18 +84,17 @@ function Login() {
     if (role === "student") navigate("/studdash");
     else if (role === "lecturer") navigate("/lectdash");
     else if (role === "registrar") navigate("/regdash");
-    else navigate("/unknown-role"); // Optional route for undefined roles
+    else navigate("/unknown-role");
   };
 
   return (
     <div className="login-container">
       <div className="login-card">
-        {/* Login Form */}
         <div className="form-wrapper">
           <h2 className="form-title">Login</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="username" className="form-label">Username</label>
+              <label htmlFor="username">Username</label>
               <input
                 type="text"
                 id="username"
@@ -105,7 +108,7 @@ function Login() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password" className="form-label">Password</label>
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
                 id="password"
@@ -117,8 +120,6 @@ function Login() {
                 className="form-input"
               />
             </div>
-
-            {error && <div className="form-error">{error}</div>}
 
             <button type="submit" disabled={loading} className="login-btn">
               {loading ? "LOGGING IN..." : "L O G I N"}
@@ -145,7 +146,6 @@ function Login() {
               className="otp-input"
             />
             {loadingOtp && <p>Verifying OTP...</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
           </div>
         )}
       </div>
