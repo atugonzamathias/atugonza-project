@@ -63,13 +63,13 @@ export const logout = async () => {
       console.log("Refresh token blacklisted successfully.");
     } catch (error) {
       console.error("Failed to blacklist refresh token:", error);
-      // Even if the API fails, still continue to logout
+      // Still proceed to clear tokens
     }
   }
 
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
-  window.location.href = "/login";  // Redirect to login page
+  return true;  // Indicate logout is complete
 };
 
 export default API;
