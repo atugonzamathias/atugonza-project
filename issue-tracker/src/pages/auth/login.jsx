@@ -42,7 +42,9 @@ function Login() {
 
     } catch (err) {
       console.error("Login Error:", err);
-      toast.error(err.response?.data?.message || "Invalid credentials. Please try again.", {
+
+      // Access the correct error message from the backend
+      toast.error(err.response?.data?.detail || "Invalid credentials. Please try again.", {
         autoClose: 15000,  // 15 seconds for error messages
       });
     } finally {
