@@ -1,7 +1,7 @@
 import React from 'react';
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Register from "./pages/auth/Register.jsx";
@@ -24,10 +24,12 @@ import NotFound from "./pages/auth/NotFound.jsx";
 import './global.css';
 import './index.css';
 
+// Import PrivateRoute
+import PrivateRoute from './components/PrivateRoute';
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      {/* ToastContainer should appear once and be outside Routes */}
       <ToastContainer 
         position="top-right"
         hideProgressBar={false}
@@ -37,9 +39,10 @@ createRoot(document.getElementById("root")).render(
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"  // You can use "dark" too
+        theme="light"
       />
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -47,15 +50,21 @@ createRoot(document.getElementById("root")).render(
         <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
         <Route path="/selectrole" element={<Selectrole />} />
         <Route path="/profsettings" element={<Profsettings />} />
-        <Route path="/studdash" element={<Dashbord />} />
-        <Route path="/submission" element={<Submission />} />
-        <Route path="/issues" element={<Issues />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/regdash" element={<Registrardash />} />
-        <Route path="/lectdash" element={<LecturerDashboard />} />
-        <Route path="/notifications" element={<NotificationsPage />} />
-        <Route path="/assign/:id" element={<Assign />} />
-        <Route path="/resolve/:id" element={<ResolveIssue />} />
+
+        {/* Protected Routes */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/studdash" element={<Dashbord />} />
+          <Route path="/submission" element={<Submission />} />
+          <Route path="/issues" element={<Issues />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/regdash" element={<Registrardash />} />
+          <Route path="/lectdash" element={<LecturerDashboard />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/assign/:id" element={<Assign />} />
+          <Route path="/resolve/:id" element={<ResolveIssue />} />
+        </Route>
+
+        {/* 404 Page */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
