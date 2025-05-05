@@ -44,9 +44,15 @@ function Login() {
 
     } catch (err) {
       console.error("Login Error:", err);
-      toast.error(err.response?.data?.detail || "Invalid credentials. Please try again.", {
-        autoClose: 15000,
-      });
+      
+      // ✨ Fix: Ensure user stays on login page and sees the error
+      if (err.response && err.response.data && err.response.data.detail) {
+        toast.error(err.response.data.detail, { autoClose: 10000 });
+      } else {
+        toast.error("Login failed. Please try again.", { autoClose: 10000 });
+      }
+      
+      // Do NOT navigate anywhere; user stays on login page
     } finally {
       setLoading(false);
     }
@@ -92,7 +98,7 @@ function Login() {
       navigate("/regdash");
     } else {
       toast.error("Invalid user role. Contact system admin.", { autoClose: 10000 });
-      // Stay on the login page (no navigation)
+      // Do NOT navigate — user stays on login
     }
   };
 
