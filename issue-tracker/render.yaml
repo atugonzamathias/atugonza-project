@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: issue-tracker-frontend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run serve
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+    buildFilter:
+      paths:
+        - ./**
+    staticPublishPath: dist
