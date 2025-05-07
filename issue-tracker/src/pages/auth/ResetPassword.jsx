@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import API from "../../API";
 
 export default function ResetPassword() {
@@ -91,6 +91,11 @@ export default function ResetPassword() {
               {isLoading ? "Processing..." : isSuccess ? "Password Reset" : "Reset Password"}
             </button>
           </form>
+          <div className="form-footer">
+            <Link to="/login" className="link">
+              Back to Login
+            </Link>
+          </div>
         </div>
       </div>
     </div>
