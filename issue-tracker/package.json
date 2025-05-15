@@ -2,6 +2,7 @@
   "name": "issue-tracker",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "preinstall": "npx only-allow npm",
     "dev": "vite",
@@ -12,6 +13,7 @@
     "serve:server": "node server.js",
     "serve": "node server.js",
     "vercel-build": "npm run build"
+
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.1.6",
