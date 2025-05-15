@@ -1,8 +1,7 @@
-import React from 'react';
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Bell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { getNotifications } from "../pages/notifications"; 
+import { getNotifications } from "../pages/notifications";
 import "./NotificationBell.css";
 
 const NotificationBell = () => {
@@ -10,12 +9,11 @@ const NotificationBell = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch recent notifications
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const response = await getNotifications();
-        setNotifications(response.data);
+        setNotifications(response.data.results || []); // ✅ Only store the array
       } catch (error) {
         console.error("Error fetching notifications", error);
       }
@@ -70,4 +68,3 @@ const NotificationBell = () => {
 };
 
 export default NotificationBell;
-

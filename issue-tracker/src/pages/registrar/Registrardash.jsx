@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { User } from 'lucide-react'; // You were missing this import for the User icon
 import API from '../../API';
 import LogoutButton from '../../components/LogoutButton';
+import NotificationBell from '../../components/NotificationBell';
 import Cards from '../../components/Cards';
 
 const RegistrarDashboard = () => {
@@ -72,6 +73,7 @@ const RegistrarDashboard = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <NotificationBell />
       <div className="flex justify-between items-center mb-6">
         <LogoutButton />
         <Link to="/profile">

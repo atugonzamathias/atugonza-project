@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import NotificationBell from "./NotificationBell";
 import LogoutButton from "./LogoutButton";
 
 const SidebarL = () => {
@@ -46,6 +47,7 @@ const SidebarL = () => {
               <span className="flex-1 ms-3 whitespace-nowrap">My Profile</span>
             </Link>
             <LogoutButton />
+            <NotificationBell />
           </li>
         </ul>
       </div>
