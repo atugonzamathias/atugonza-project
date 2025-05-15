@@ -82,7 +82,7 @@ const Lectdash = () => {
     if (actionType !== "in_progress") return;
     try {
       console.log("Calling in_progress for", issueId);
-      const res = await API.post(`/api/issues/${id}/resolve/`);
+      const res = await API.post(`/api/issues/${issueId}/resolve/`);
       // update just that issue in our list
       setFilteredIssues((issues) =>
         issues.map((i) => (i.id === res.data.id ? res.data : i))
@@ -119,9 +119,7 @@ const Lectdash = () => {
         {/* Header */}
         <header className="bg-blue-950 border-b mb-6 p-4 rounded-lg text-white">
           <h1 className="text-2xl font-bold">Lecturer Dashboard</h1>
-          <p className="text-sm text-gray-300">
-            Manage and resolve student issues
-          </p>
+          <p className="text-sm text-gray-300">Manage and resolve student issues</p>
         </header>
 
         {/* Stats */}
@@ -198,7 +196,7 @@ const Lectdash = () => {
             <tbody className="divide-y divide-gray-200">
               {filteredIssues.map((issue) => (
                 <tr key={issue.id}>
-                  <td className="px-4 py-2">{issue.id}</td>
+                  <td className="px-4 py-2">{issue.subject}</td>
                   <td className="px-4 py-2">{issue.full_name}</td>
                   <td className="px-4 py-2">{issue.course_code}</td>
                   <td className="px-4 py-2">
@@ -238,7 +236,7 @@ const Lectdash = () => {
                   Mark as In Progress
                 </button>
                 <Link
-                  to={"/resolve/:id"}
+                  to={`/resolve/${selectedIssue.id}`} 
                   className="py-2 rounded bg-green-600 hover:bg-green-700 text-white text-center"
                 >
                   Resolve Issue

@@ -4,20 +4,20 @@ import BackArrow from '../../components/BackArrow';
 import API from "../../API"; // Adjust the path if needed
 
 const ResolveIssue = () => {
-  const { id } = useParams();  // Get the issue ID from the URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const [notes, setNotes] = useState("");
-  const [issueDetails, setIssueDetails] = useState(null);  // To store the issue data
+  const [issueDetails, setIssueDetails] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Fetch issue details when component mounts
   useEffect(() => {
     const fetchIssueDetails = async () => {
       try {
         const res = await API.get(`/api/issues/${id}/`);
         setIssueDetails(res.data);
       } catch (err) {
+        console.error(err);
         setError("Failed to load issue details.");
       }
     };
@@ -33,7 +33,7 @@ const ResolveIssue = () => {
     setLoading(true);
     API.post(`/api/issues/${id}/resolve/`, { resolution_notes: notes })
       .then(() => {
-        navigate("/lectdash");  // Navigate to lecturer dashboard after resolving the issue
+        navigate("/lectdash");
       })
       .catch(() => setError("Could not resolve issue. Please try again."))
       .finally(() => setLoading(false));
@@ -51,15 +51,17 @@ const ResolveIssue = () => {
     <div className="max-w-xl mx-auto p-6 bg-white rounded shadow">
       <BackArrow />
       <h2 className="text-2xl font-semibold mb-4">
-        Resolve Issue: {`Issue #${id}`} {/* Display the ID or subject if needed */}
+        Resolve Issue: {`Issue #${id}`}
       </h2>
 
-      {/* Displaying issue details */}
       <p><strong>Subject:</strong> {issueDetails.subject}</p>
-      <p><strong>Course:</strong> {issueDetails.course_code}</p>
-      <p><strong>Student:</strong> {issueDetails.full_name}</p>
+      <p><strong>Course Code:</strong> {issueDetails.course_code}</p>
+      <p><strong>Course ID:</strong> {issueDetails.course_id}</p>
+      <p><strong>Student Name:</strong> {issueDetails.full_name}</p>
+      <p><strong>Registration Number:</strong> {issueDetails.registration_number}</p>
+      <p><strong>Lecturer:</strong> {issueDetails.lecturer_name}</p>
 
-      <label className="block mb-2 font-medium">Resolution Notes</label>
+      <label className="block mt-4 mb-2 font-medium">Resolution Notes</label>
       <textarea
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
@@ -74,7 +76,7 @@ const ResolveIssue = () => {
         <button
           onClick={handleResolve}
           className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-          disabled={loading || !notes.trim()}  // Disabled if no notes or loading
+          disabled={loading || !notes.trim()}
         >
           {loading ? 'Resolving...' : 'Mark as Resolved'}
         </button>
