@@ -7,8 +7,8 @@ import API from "../../API";
 const Lectdash = () => {
   const [allIssues, setAllIssues] = useState([]);
   const [filteredIssues, setFilteredIssues] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("All Statuses");
-  const [typeFilter, setTypeFilter] = useState("All Types");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [cookiesModalOpen, setCookiesModalOpen] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState(null);
@@ -32,13 +32,13 @@ const Lectdash = () => {
     fetchIssues();
   }, []);
 
-  // Apply filters + search
+  // Filter and search
   useEffect(() => {
     let result = [...allIssues];
-    if (statusFilter !== "All Statuses") {
+    if (statusFilter !== "all") {
       result = result.filter((i) => i.status === statusFilter);
     }
-    if (typeFilter !== "All Types") {
+    if (typeFilter !== "all") {
       result = result.filter((i) => i.issue_type === typeFilter);
     }
     if (searchQuery) {
@@ -52,38 +52,34 @@ const Lectdash = () => {
     setFilteredIssues(result);
   }, [statusFilter, typeFilter, searchQuery, allIssues]);
 
-  // Dashboard stats
   const totalIssues = allIssues.length;
   const assignedIssues = allIssues.filter((i) => i.status === "assigned").length;
   const inProgressIssues = allIssues.filter((i) => i.status === "in_progress").length;
   const resolvedIssues = allIssues.filter((i) => i.status === "resolved").length;
 
   const handleReset = () => {
-    setStatusFilter("All Statuses");
-    setTypeFilter("All Types");
+    setStatusFilter("all");
+    setTypeFilter("all");
     setSearchQuery("");
   };
 
   const getBadgeClass = (type) => {
     switch (type) {
-      case "Missing Marks":
+      case "missing marks":
         return "bg-red-100 text-red-800";
-      case "Grade Appeal":
+      case "appeal":
         return "bg-blue-100 text-blue-800";
-      case "Correction":
+      case "correction":
         return "bg-yellow-100 text-yellow-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
-  // ——— In-Progress API call ———
   const handleAction = async (actionType, issueId) => {
     if (actionType !== "in_progress") return;
     try {
-      console.log("Calling in_progress for", issueId);
       const res = await API.post(`/api/issues/${issueId}/resolve/`);
-      // update just that issue in our list
       setFilteredIssues((issues) =>
         issues.map((i) => (i.id === res.data.id ? res.data : i))
       );
@@ -103,6 +99,7 @@ const Lectdash = () => {
       </WrapL>
     );
   }
+
   if (error) {
     return (
       <WrapL>
@@ -140,10 +137,10 @@ const Lectdash = () => {
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="w-full p-2 rounded"
               >
-                <option>All Statuses</option>
-                <option>assigned</option>
-                <option>in_progress</option>
-                <option>resolved</option>
+                <option value="all">All Statuses</option>
+                <option value="assigned">Assigned</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
               </select>
             </div>
             <div>
@@ -153,11 +150,10 @@ const Lectdash = () => {
                 onChange={(e) => setTypeFilter(e.target.value)}
                 className="w-full p-2 rounded"
               >
-                <option>All Types</option>
-                <option>Missing Marks</option>
-                <option>appeal</option>
-                <option>Grade Appeal</option>
-                <option>correction</option>
+                <option value="all">All Types</option>
+                <option value="missing_marks">Missing Marks</option>
+                <option value="appeal">Appeal</option>
+                <option value="correction">Correction</option>
               </select>
             </div>
             <div>
@@ -181,13 +177,13 @@ const Lectdash = () => {
           </div>
         </div>
 
-        {/* Issues Table */}
+        {/* Table */}
         <div className="bg-white rounded shadow overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-blue-950">
+            <thead className="bg-blue-950 text-white">
               <tr>
                 {["Subject", "Student", "Course", "Issue Type", "Status", "Date", "Actions"].map((h) => (
-                  <th key={h} className="px-4 py-2 text-left text-xs font-medium text-white uppercase">
+                  <th key={h} className="px-4 py-2 text-left text-xs font-medium uppercase">
                     {h}
                   </th>
                 ))}
@@ -204,7 +200,7 @@ const Lectdash = () => {
                       {issue.issue_type}
                     </span>
                   </td>
-                  <td className="px-4 py-2">{issue.status}</td>
+                  <td className="px-4 py-2 capitalize">{issue.status.replace("_", " ")}</td>
                   <td className="px-4 py-2">{new Date(issue.created_at).toLocaleDateString()}</td>
                   <td className="px-4 py-2 text-right">
                     <button
@@ -223,7 +219,7 @@ const Lectdash = () => {
           </table>
         </div>
 
-        {/* Modal for Actions */}
+        {/* Modal */}
         {cookiesModalOpen && selectedIssue && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white rounded-lg p-6 w-80">
@@ -236,7 +232,7 @@ const Lectdash = () => {
                   Mark as In Progress
                 </button>
                 <Link
-                  to={`/resolve/${selectedIssue.id}`} 
+                  to={`/resolve/${selectedIssue.id}`}
                   className="py-2 rounded bg-green-600 hover:bg-green-700 text-white text-center"
                 >
                   Resolve Issue
@@ -258,13 +254,13 @@ const Lectdash = () => {
 
 // Reusable Dashboard Card
 const DashboardCard = ({ title, value, subtitle, icon }) => (
-  <div className="bg-blue-950 p-4 rounded shadow flex items-center justify-between">
+  <div className="bg-blue-950 p-4 rounded shadow flex items-center justify-between text-white">
     <div>
-      <p className="text-sm text-white">{title}</p>
-      <p className="text-2xl font-bold text-white">{value}</p>
-      <p className="text-xs text-gray-300">{subtitle}</p>
+      <h4 className="text-lg font-semibold">{title}</h4>
+      <p className="text-2xl">{value}</p>
+      <p className="text-sm text-gray-300">{subtitle}</p>
     </div>
-    <div className="p-2 bg-white rounded-full">{icon}</div>
+    <div className="bg-white text-blue-950 p-2 rounded-full">{icon}</div>
   </div>
 );
 
