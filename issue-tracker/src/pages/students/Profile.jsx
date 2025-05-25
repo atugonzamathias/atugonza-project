@@ -1,9 +1,9 @@
-import API from "../../API";
+import API from "../../API"; 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackArrow from '../../components/BackArrow';
 
-const BASE_URL = "https://atumathias.pythonanywhere.com"; // Adjust if your backend URL is different
+const BASE_URL = "https://atumathias.pythonanywhere.com";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -92,9 +92,18 @@ const ProfilePage = () => {
       const response = await API.patch("/api/profile/", formData);
       setUser((prev) => ({ ...prev, ...response.data }));
       setEditing(false);
+      setError("");
     } catch (err) {
       console.error("Error updating profile:", err);
-      setError("Failed to update profile.");
+      // Try to get detailed backend errors if any
+      if (err.response?.data) {
+        const messages = Object.entries(err.response.data)
+          .map(([key, value]) => `${key}: ${value}`)
+          .join(" ");
+        setError(messages || "Failed to update profile.");
+      } else {
+        setError("Failed to update profile.");
+      }
     } finally {
       setLoading(false);
     }
@@ -105,7 +114,10 @@ const ProfilePage = () => {
   };
 
   const handleChangePassword = async () => {
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
+    setPasswordError("");
+    setPasswordSuccess("");
+
+    if (passwordData.new_password !== passwordData.confirm_new_password) {
       setPasswordError("New passwords do not match.");
       return;
     }
@@ -126,9 +138,22 @@ const ProfilePage = () => {
         confirm_new_password: "",
       });
     } catch (err) {
-      setPasswordError(
-        err.response?.data?.detail || "Failed to update password. Check your current password."
-      );
+      // Handle detailed error messages from backend, which might be a dict of errors
+      if (err.response?.data) {
+        if (typeof err.response.data === "string") {
+          setPasswordError(err.response.data);
+        } else if (err.response.data.detail) {
+          setPasswordError(err.response.data.detail);
+        } else {
+          // Concatenate all errors
+          const messages = Object.entries(err.response.data)
+            .map(([key, value]) => `${key}: ${value}`)
+            .join(" ");
+          setPasswordError(messages || "Failed to update password. Check your current password.");
+        }
+      } else {
+        setPasswordError("Failed to update password. Check your current password.");
+      }
     } finally {
       setLoading(false);
     }
@@ -148,7 +173,7 @@ const ProfilePage = () => {
       }
       return `${BASE_URL}${user.profile_picture}`;
     }
-    return "/default-profile.png"; // Set your default profile image path if needed
+    return "/default-profile.png";
   };
 
   return (
@@ -247,7 +272,10 @@ const ProfilePage = () => {
             </button>
           ) : (
             <button
-              onClick={() => setEditing(true)}
+              onClick={() => {
+                setError("");
+                setEditing(true);
+              }}
               disabled={loading}
               className="flex-1 bg-blue-900 text-white px-4 py-2 rounded"
             >
@@ -255,7 +283,11 @@ const ProfilePage = () => {
             </button>
           )}
           <button
-            onClick={() => setShowPasswordForm(!showPasswordForm)}
+            onClick={() => {
+              setPasswordError("");
+              setPasswordSuccess("");
+              setShowPasswordForm(!showPasswordForm);
+            }}
             disabled={loading}
             className="flex-1 bg-gray-600 text-white px-4 py-2 rounded"
           >
@@ -275,7 +307,10 @@ const ProfilePage = () => {
             {["current_password", "new_password", "confirm_new_password"].map((field) => (
               <div key={field} className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 capitalize">
-                  {field.replace("Password", " Password")}
+                  {field
+                    .split("_")
+                    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                    .join(" ")}
                 </label>
                 <div className="relative">
                   <input
