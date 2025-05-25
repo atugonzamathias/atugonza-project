@@ -173,7 +173,7 @@ const ProfilePage = () => {
       }
       return `${BASE_URL}${user.profile_picture}`;
     }
-    return "/default-profile.png";
+    return "https://atumathias.pythonanywhere.com/static/images/default-profile.png";
   };
 
   return (
