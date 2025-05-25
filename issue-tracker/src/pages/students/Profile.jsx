@@ -1,6 +1,5 @@
 import API from "../../API";
 import React, { useState, useEffect } from "react";
-import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BackArrow from '../../components/BackArrow';
 
@@ -15,16 +14,16 @@ const ProfilePage = () => {
   const [error, setError] = useState("");
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [passwordData, setPasswordData] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
+    current_password: "",
+    new_password: "",
+    confirm_new_password: "",
   });
   const [passwordError, setPasswordError] = useState("");
   const [passwordSuccess, setPasswordSuccess] = useState("");
   const [showPassword, setShowPassword] = useState({
-    currentPassword: false,
-    newPassword: false,
-    confirmPassword: false,
+    current_password: false,
+    new_password: false,
+    confirm_new_password: false,
   });
 
   useEffect(() => {
@@ -114,17 +113,17 @@ const ProfilePage = () => {
     setLoading(true);
     try {
       const response = await API.post("/api/profile/change_password/", {
-        current_password: passwordData.currentPassword,
-        new_password: passwordData.newPassword,
-        confirm_new_password: passwordData.confirmPassword,
+        current_password: passwordData.current_password,
+        new_password: passwordData.new_password,
+        confirm_new_password: passwordData.confirm_new_password,
       });
       setPasswordSuccess(response.data.detail || "Password updated successfully.");
       setPasswordError("");
       setShowPasswordForm(false);
       setPasswordData({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
+        current_password: "",
+        new_password: "",
+        confirm_new_password: "",
       });
     } catch (err) {
       setPasswordError(
@@ -155,14 +154,6 @@ const ProfilePage = () => {
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
       <BackArrow />
-      <div
-        className="mb-4 flex items-center gap-2 cursor-pointer text-blue-900"
-        onClick={() => navigate(-1)}
-      >
-        <ArrowLeft size={20} />
-        <span className="font-medium">Back</span>
-      </div>
-
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-center">My Profile</h2>
       </div>
@@ -180,7 +171,7 @@ const ProfilePage = () => {
           />
           <input
             type="file"
-            accept="image/jpeg, image/png"
+            accept="image/jpeg, image/png, image/jpg"
             onChange={handleProfilePictureChange}
             disabled={loading}
             className="hidden"
@@ -281,7 +272,7 @@ const ProfilePage = () => {
             {passwordSuccess && (
               <p className="text-green-600 mb-2">{passwordSuccess}</p>
             )}
-            {["currentPassword", "newPassword", "confirmPassword"].map((field) => (
+            {["current_password", "new_password", "confirm_new_password"].map((field) => (
               <div key={field} className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 capitalize">
                   {field.replace("Password", " Password")}
@@ -294,13 +285,6 @@ const ProfilePage = () => {
                     onChange={handlePasswordChange}
                     className="mt-1 w-full p-2 border border-gray-300 rounded"
                   />
-                  <button
-                    type="button"
-                    onClick={() => togglePasswordVisibility(field)}
-                    className="absolute right-3 top-2 text-sm text-gray-600"
-                  >
-                    {showPassword[field] ? "Hide" : "Show"}
-                  </button>
                 </div>
               </div>
             ))}

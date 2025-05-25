@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-import { User } from 'lucide-react';
 import Cards from '../../components/Cards';
 import Wrapper from '../../components/wrapper';
-import LogoutButton from '../../components/LogoutButton';
-import BackArrow from '../../components/BackArrow';
 import API from '../../API';
 
 // Format Date Helper
@@ -84,8 +81,6 @@ const StudentDashboard = () => {
   return (
     <Wrapper>
       <div className="m-2">
-        <BackArrow />
-
         {/* Header */}
         <header className="bg-blue-950 border-b border-gray-200 px-6 py-4">
           <div className="flex justify-between items-center">
@@ -96,15 +91,6 @@ const StudentDashboard = () => {
               <p className="text-sm text-gray-300">
                 Have your issues resolved
               </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Link to="/profile">
-                <button className="p-2">
-                  <span className="sr-only">Profile</span>
-                  <User size={24} className="text-white" />
-                </button>
-              </Link>
-              <LogoutButton />
             </div>
           </div>
         </header>

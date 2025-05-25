@@ -206,13 +206,6 @@ export default function RegisterForm() {
                   backgroundColor: "white" // <-- ensure background is visible
                 }}
               />
-              <button
-                type="button"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm text-gray-600"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Eye icon toggle */}
-              </button>
             </div>
           </div>
 

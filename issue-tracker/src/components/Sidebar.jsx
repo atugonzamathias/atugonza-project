@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 import LogoutButton from "./LogoutButton";
+import { User } from 'lucide-react';
 import NotificationBell from "./NotificationBell";
 
 const Sidebar = () => {
@@ -48,7 +49,14 @@ const Sidebar = () => {
                 <span class="flex-1 ms-3 whitespace-nowrap">Create Issue</span>
               </Link>
             </li>
+
             <li>
+              <Link to="/profile">
+                <button className="p-2">
+                  <span className="sr-only">Profile</span>
+                  <User size={24} className="text-white" />
+                </button>
+              </Link>
             </li>
             <LogoutButton />
           </ul>
