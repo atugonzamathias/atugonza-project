@@ -8,7 +8,7 @@ const Submission = () => {
     user_number: "",
     registration_number: "",
     full_name: "",
-    course_unit: "",
+    subject: "",
     course_code: "",
     course_id: "",
     issue_type: "",
@@ -60,7 +60,7 @@ const Submission = () => {
         user_number: prevData.user_number,
         registration_number: prevData.registration_number,
         full_name: prevData.full_name,
-        course_unit: "",
+        subject: "",
         course_code: "",
         course_id: "",
         issue_type: "",
@@ -105,7 +105,7 @@ const Submission = () => {
 
             {/* Text Inputs */}
             {[
-              { label: "Course Unit", id: "course_unit" },
+              { label: "Course Unit", id: "subject" },
               { label: "Course Code", id: "course_code" },
               { label: "Course ID", id: "course_id" },
               { label: "Lecturer Name", id: "lecturer_name" },
