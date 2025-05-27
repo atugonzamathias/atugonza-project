@@ -182,7 +182,7 @@ export default function RegisterForm() {
               id="email"
               name="email"
               type="email"
-              placeholder="e.g. example@university.ac.ug"
+              placeholder="e.g : username@gmail.com"
               value={formData.email}
               onChange={handleChange}
               required
